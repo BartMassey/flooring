@@ -1,6 +1,6 @@
-const DIMS: (usize, usize) = (1960, 10);
+const DIMS: (u64, usize) = (1960, 10);
 
-const BOARDS: &[(usize, u64)] = &[
+const BOARDS: &[Stock] = &[
     Stock { count: 10, length: 900 },
     Stock { count: 10, length: 450 },
     Stock { count: 20, length: 225 },
@@ -16,7 +16,7 @@ struct Stock {
 #[derive(Debug, Clone, Copy)]
 struct Cap {
     row: usize,
-    col: usize,
+    col: u64,
 }
 
 impl Default for Cap {
@@ -36,7 +36,7 @@ impl Cap {
     }
 
     fn retract_row(&mut self) {
-        assert_eq!(self.cap.col, 0);
+        assert_eq!(self.col, 0);
         self.col = DIMS.0;
         self.row += 1;
     }    
@@ -53,11 +53,12 @@ struct Soln(Vec<usize>);
 
 impl State {
     fn dfs(&mut self) -> Option<Soln> {
-        if cap.is_empty() {
-            return Soln(self.used.clone());
+        if self.cap.is_empty() {
+            return Some(Soln(self.used.clone()));
         }
-        for (i, &count) in &self.stock.enumerate() {
-            if count == 0 {
+        let nstock = self.stock.len();
+        for i in 0..nstock {
+            if self.stock[i] == 0 {
                 continue;
             }
             let length = BOARDS[i].length;
@@ -70,7 +71,7 @@ impl State {
             }
             self.cap.col -= length;
             self.used.push(i);
-            if let Some(soln) = self.solve() {
+            if let Some(soln) = self.dfs() {
                 return Some(soln);
             }
             let _ = self.used.pop();
@@ -90,8 +91,8 @@ impl State {
 
 impl Default for State {
     fn default() -> Self {
-        let stock = BOARDS.iter().map(|(&count, _)| count).collect();
-        Stock { stock, ..Default::default() }
+        let stock = BOARDS.iter().map(|b| b.count).collect();
+        State { stock, ..Default::default() }
     }
 }
 
