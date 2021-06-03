@@ -9,6 +9,8 @@ const BOARDS: &[Stock] = &[
     Stock { count: 20, length: 80 },
 ];
 
+type Soln = Vec<usize>;
+
 #[derive(Debug, Clone, PartialEq, Eq)]
 struct RowState {
     solns: HashSet<Soln>,
@@ -31,9 +33,6 @@ struct State {
     choices: Vec<Soln>,
 }
 
-#[derive(Debug, Clone, Hash, PartialEq, Eq)]
-struct Soln(Vec<usize>);
-
 fn starting_stock() -> Vec<usize> {
     BOARDS.iter().map(|b| b.count).collect()
 }
@@ -51,16 +50,22 @@ impl Default for RowState {
 
 impl RowState {
     fn legal_rows() -> Vec<Soln> {
+
+        #[allow(clippy::ptr_arg)]
+        fn boards_used(s: &Soln) -> usize {
+            s.iter().cloned().sum()
+        }
+
         let mut state = RowState::default();
         state.dfs();
         let mut solns: Vec<Soln> = state.solns.into_iter().collect();
-        solns.sort_by_key(Soln::boards_used);
+        solns.sort_by_key(boards_used);
         solns
     }
 
     fn dfs(&mut self) {
         if self.cap == 0 {
-            self.solns.insert(Soln(self.used.clone()));
+            self.solns.insert(self.used.clone());
             return;
         }
         let nstock = self.stock.len();
@@ -84,17 +89,11 @@ impl RowState {
     }
 }
 
-impl Soln {
-    fn boards_used(&self) -> usize {
-        self.0.iter().cloned().sum()
-    }
-}
-
 macro_rules! change_row {
     ($name:ident, $op:tt) => {
         fn $name(&mut self, row: usize) {
             let choices = std::mem::take(&mut self.choices);
-            let row = &choices[row].0;
+            let row = &choices[row];
             for (s, &r) in self.stock.iter_mut().zip(row.iter()) {
                 *s $op r;
             }
@@ -113,7 +112,7 @@ impl State {
     }
 
     fn is_invalid_row(&self, row: usize) -> bool {
-        for (&s, &r) in self.stock.iter().zip(self.choices[row].0.iter()) {
+        for (&s, &r) in self.stock.iter().zip(self.choices[row].iter()) {
             if s < r {
                 return true;
             }
@@ -154,7 +153,7 @@ impl State {
 
     fn show_soln(&self) {
         for &c in &self.used {
-            for (i, &n) in self.choices[c].0.iter().enumerate() {
+            for (i, &n) in self.choices[c].iter().enumerate() {
                 for _ in 0..n {
                     print!("{} ", BOARDS[i].length as f64 / 10.0);
                 }
