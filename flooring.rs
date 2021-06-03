@@ -110,7 +110,7 @@ macro_rules! change_row {
 impl State {
     fn starting() -> Self {
         let stock = starting_stock();
-        let used = starting_used();
+        let used = vec![];
         let cap = DIMS.1;
         let choices = RowState::legal_rows();
         State { stock, used, cap, choices }
@@ -129,6 +129,7 @@ impl State {
     change_row!(add_row, +=);
 
     fn dfs(&mut self) -> Option<State> {
+        assert_eq!(self.cap + self.used.len(), DIMS.1);
         if self.cap == 0 {
             return Some(self.clone());
         }
