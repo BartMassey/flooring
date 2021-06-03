@@ -38,16 +38,12 @@ fn starting_stock() -> Vec<usize> {
     BOARDS.iter().map(|b| b.count).collect()
 }
 
-fn starting_used() -> Vec<usize> {
-    vec![0; BOARDS.len()]
-}
-
 impl Default for RowState {
     fn default() -> Self {
         RowState {
             solns: HashSet::default(),
             cap: DIMS.0,
-            used: starting_used(),
+            used: vec![0; BOARDS.len()],
             stock: starting_stock(),
         }
     }
