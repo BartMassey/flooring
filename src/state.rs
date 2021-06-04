@@ -5,7 +5,7 @@ use crate::*;
 pub struct State {
     /// Histogram of currently available stock.
     pub stock: Vec<usize>,
-    /// List of indices into [State] [choices] for each row layed so far.
+    /// List of indices into [State] `choices` for each row layed so far.
     pub used: Vec<usize>,
     /// Number of rows remaining to process.
     pub cap: usize,
@@ -45,7 +45,7 @@ impl State {
         }
     }
 
-    /// Returns `true` iff [row] would use more stock than currently available.
+    /// Returns [true] iff `row` would use more stock than currently available.
     fn is_invalid_row(&self, row: usize) -> bool {
         for (&s, &r) in self.stock.iter().zip(self.choices[row].iter()) {
             if s < r {
