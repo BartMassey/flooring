@@ -33,7 +33,6 @@ impl Default for RowState {
 impl RowState {
     /// Return a list of row solutions ordered from least boards to most.
     pub fn legal_rows() -> Vec<RowSoln> {
-
         #[allow(clippy::ptr_arg)]
         fn boards_used(s: &RowSoln) -> usize {
             s.iter().cloned().sum()

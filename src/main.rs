@@ -10,10 +10,22 @@ pub const DIMS: (u64, usize) = (1960, 10);
 
 /// The stock of boards available.
 pub const BOARDS: &[Stock] = &[
-    Stock { count: 10, length: 900 },
-    Stock { count: 10, length: 450 },
-    Stock { count: 20, length: 225 },
-    Stock { count: 20, length: 80 },
+    Stock {
+        count: 10,
+        length: 900,
+    },
+    Stock {
+        count: 10,
+        length: 450,
+    },
+    Stock {
+        count: 20,
+        length: 225,
+    },
+    Stock {
+        count: 20,
+        length: 80,
+    },
 ];
 
 /// Description of a single bin of boards.

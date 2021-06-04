@@ -37,7 +37,12 @@ impl State {
         let used = vec![];
         let cap = DIMS.1;
         let choices = RowState::legal_rows();
-        State { stock, used, cap, choices }
+        State {
+            stock,
+            used,
+            cap,
+            choices,
+        }
     }
 
     /// Returns `true` iff [row] would use more stock than currently available.
