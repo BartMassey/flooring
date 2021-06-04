@@ -21,5 +21,5 @@ this particular instance: greedy placement of boards from
 longest to shortest would find the solution without
 search. Ah well — maybe a harder instance will be given.
 
-On my fast desktop running Linux, this solution completes in
-about 80ms.
+On my fast desktop running Linux, the solution is found in
+less than 5ms.
